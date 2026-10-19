@@ -37,5 +37,36 @@ void StateButton::updateButtonIcon(bool checked)
 void StateButton::addMode(ButtonMode mode)
 {
     m_modes.push_back(mode);
-    qDebug() << "added mode " << mode.title;
+    int index = m_modes.size() - 1;
+
+    QAction *action = new QAction(mode.title, this);
+    action->setCheckable(true); 
+
+    m_actionGroup->addAction(action);
+    this->menu()->addAction(action);
+
+    connect(action, &QAction::triggered, this, [this, index]() {
+        setModeIndex(index);
+    });
+
+    if (m_modes.size() == 1) {
+        action->setChecked(true);
+        setModeIndex(0);
+    }
+}
+
+void StateButton::setModeIndex(int index)
+{
+    if (index < 0 || index >= m_modes.size()) return;
+
+    m_currentModeIndex = index;
+
+    m_onIcon = m_modes[index].onIcon;
+    m_offIcon = m_modes[index].offIcon;
+
+    setToolTip(m_modes[index].title);
+
+    updateButtonIcon(isChecked());
+    
+    qDebug() << "current:" << m_modes[index].title;
 }

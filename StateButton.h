@@ -27,6 +27,8 @@ class StateButton: public QToolButton
     private:
         void updateButtonIcon(bool checked);
 
+        void setModeIndex(int index);
+        
         QList<ButtonMode> m_modes;
         int m_currentModeIndex = 0;
 
